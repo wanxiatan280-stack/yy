@@ -1,1 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据新闻 · 可视化报道</title>
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #ffffff;
+            color: #222222;          /* 黑色系字体 */
+            line-height: 1.7;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 标题区 */
+        .header {
+            border-left: 6px solid #1a6fb0;   /* 蓝色主色 */
+            padding-left: 20px;
+            margin-bottom: 48px;
+        }
+
+        .header .tag {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a6fb0;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #111111;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .header .meta {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* 章节 */
+        .section {
+            margin-bottom: 56px;
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #1a6fb0;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .section-desc {
+            font-size: 15px;
+            color: #555555;
+            margin-bottom: 20px;
+            padding-left: 40px;
+        }
+
+        /* 图表容器 */
+        .chart-box {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #e8eef4;
+            border-radius: 10px;
+            padding: 10px 0;
+            box-shadow: 0 2px 12px rgba(26, 111, 176, 0.06);
+        }
+
+        /* 折线图高度稍大，便于交互 */
+        #lineChart {
+            width: 100%;
+            height: 460px;
+        }
+
+        #barChart {
+            width: 100%;
+            height: 420px;
+        }
+
+        /* 图 2：GIF 图片 */
+        .gif-wrapper {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .gif-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #e8eef4;
+        }
+
+        .caption {
+            font-size: 13px;
+            color: #888888;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* 数据来源脚注 */
+        .footnote {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #888888;
+            line-height: 1.8;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            body { padding: 24px 14px 60px; }
+            .header h1 { font-size: 23px; }
+            #lineChart { height: 340px; }
+            #barChart { height: 320px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ==================== 头部 ==================== -->
+    <header class="header">
+        <div class="tag">数据新闻 · Data Journalism</div>
+        <h1>此处替换为你的新闻标题</h1>
+        <div class="meta">数据来源：此处填写来源 &nbsp;|&nbsp; 制图：你的名字 / 团队 &nbsp;|&nbsp; 2026 年</div>
+    </header>
+
+    <!-- ==================== 表 1 → 动态折线图 ==================== -->
+    <section class="section">
+        <div class="section-title">
+            <span class="num">1</span>
+            表 1 数据可视化
+        </div>
+        <p class="section-desc">
+            将鼠标移动到折线上的数据点或下方时间轴上，即可查看该时间点的**具体数值与占比**。
+        </p>
+        <div class="chart-box">
+            <div id="lineChart"></div>
+        </div>
+        <p class="caption">图 1：由表 1 数据生成（此处可补充图表说明）</p>
+    </section>
+
+    <!-- ==================== 图 1 → 柱形图 ==================== -->
+    <section class="section">
+        <div class="section-title">
+            <span class="num">2</span>
+            图 1 数据可视化
+        </div>
+        <p class="section-desc">
+            将原文图 1 转换为柱形图，便于直观对比各类别数值高低。
+        </p>
+        <div class="chart-box">
+            <div id="barChart"></div>
+        </div>
+        <p class="caption">图 2：由原文图 1 数据生成（此处可补充图表说明）</p>
+    </section>
+
+    <!-- ==================== 图 2 → GIF ==================== -->
+    <section class="section">
+        <div class="section-title">
+            <span class="num">3</span>
+            原文图 2
+        </div>
+        <p class="section-desc">
+            以下为同级目录下的 31.gif 动态图。
+        </p>
+        <div class="gif-wrapper">
+            <!-- 同级文件内的 31.gif -->
+            <img src="31.gif" alt="原文图 2 动态图">
+        </div>
+        <p class="caption">图 3：原文图 2（31.gif）</p>
+    </section>
+
+    <!-- ==================== 脚注 ==================== -->
+    <div class="footnote">
+        <p>说明：本页面为数据新闻可视化呈现，图表数据来自原始 Word 文件中的表 1 与图 1。</p>
+        <p>折线图与柱形图使用 Apache ECharts 5 生成，支持鼠标交互。</p>
+    </div>
+
+</div>
+
+<script>
+    /* =====================================================
+       数据配置区 —— 请替换为 Word 文件中的真实数据
+       ===================================================== */
+
+    // ---------- 表 1 的数据（折线图） ----------
+    // 请把 categories 换成表 1 的时间/类别列
+    // 请把 values 换成表 1 的数值列
+    // percentage 不需要手动算，代码会根据 values 自动计算占比
+    const lineData = {
+        categories: ["类别A", "类别B", "类别C", "类别D", "类别E", "类别F", "类别G"],
+        values: [120, 200, 150, 280, 220, 310, 260]
+    };
+
+    // ---------- 图 1 的数据（柱形图） ----------
+    const barData = {
+        categories: ["项目一", "项目二", "项目三", "项目四", "项目五"],
+        values: [85, 132, 76, 158, 110]
+    };
+
+    /* =====================================================
+       以下为图表初始化代码，一般不需要修改
+       ===================================================== */
+
+    // ---------- 折线图 ----------
+    const lineChart = echarts.init(document.getElementById('lineChart'));
+
+    // 计算总数值，用于 tooltip 中显示百分比
+    const lineTotal = lineData.values.reduce((a, b) => a + b, 0);
+
+    const lineOption = {
+        // 蓝色主色调
+        color: ['#1a6fb0'],
+
+        // 提示框：鼠标悬停时显示
+        tooltip: {
+            trigger: 'axis',           // 坐标轴触发，鼠标靠近任意点/轴都能触发
+            axisPointer: {
+                type: 'line',          // 显示一条纵向指示线
+                lineStyle: { color: '#1a6fb0', width: 1, type: 'dashed' }
+            },
+            backgroundColor: '#ffffff',
+            borderColor: '#d0dce8',
+            borderWidth: 1,
+            padding: [10, 14],
+            textStyle: { color: '#222222', fontSize: 13 },
+            // 核心：函数 formatter，同时显示数值 + 占比
+            formatter: function (params) {
+                const p = params[0];
+                const value = p.value;
+                const percent = lineTotal > 0 ? ((value / lineTotal) * 100).toFixed(1) : '0.0';
+                return `
+                    <div style="font-weight:600;margin-bottom:6px;color:#1a6fb0;">
+                        ${p.axisValue}
+                    </div>
+                    <div>
+                        ${p.marker} 数值：<strong>${value.toLocaleString()}</strong>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        占比：<strong>${percent}%</strong>
+                    </div>
+                `;
+            }
+        },
+
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '8%',
+            top: '12%',
+            containLabel: true
+        },
+
+        xAxis: {
+            type: 'category',
+            data: lineData.categories,
+            boundaryGap: false,
+            axisLine: { lineStyle: { color: '#cccccc' } },
+            axisLabel: { color: '#333333', fontSize: 12 },
+            axisTick: { show: false }
+        },
+
+        yAxis: {
+            type: 'value',
+            name: '数值',
+            nameTextStyle: { color: '#666666', fontSize: 12 },
+            axisLabel: { color: '#333333', fontSize: 12 },
+            splitLine: { lineStyle: { color: '#eef2f6', type: 'dashed' } },
+            axisLine: { show: false }
+        },
+
+        series: [
+            {
+                name: '数值',
+                type: 'line',
+                data: lineData.values,
+
+                // 平滑曲线
+                smooth: true,
+
+                // 蓝色折线
+                lineStyle: { width: 3, color: '#1a6fb0' },
+
+                // 数据点：空心圆，悬停变大
+                symbol: 'circle',
+                symbolSize: 8,
+                itemStyle: {
+                    color: '#ffffff',
+                    borderColor: '#1a6fb0',
+                    borderWidth: 2.5
+                },
+
+                // 悬停时数据点放大
+                emphasis: {
+                    scale: 1.6,
+                    itemStyle: {
+                        color: '#1a6fb0',
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }
+                },
+
+                // 折线下方浅蓝色渐变填充
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(26,111,176,0.22)' },
+                        { offset: 1, color: 'rgba(26,111,176,0.02)' }
+                    ])
+                }
+            }
+        ]
+    };
+
+    lineChart.setOption(lineOption);
+
+    // 窗口大小变化时自适应
+    window.addEventListener('resize', () => lineChart.resize());
+
+
+    // ---------- 柱形图 ----------
+    const barChart = echarts.init(document.getElementById('barChart'));
+
+    const barOption = {
+        color: ['#1a6fb0'],
+
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            backgroundColor: '#ffffff',
+            borderColor: '#d0dce8',
+            borderWidth: 1,
+            padding: [10, 14],
+            textStyle: { color: '#222222', fontSize: 13 },
+            formatter: function (params) {
+                const p = params[0];
+                return `
+                    <div style="font-weight:600;margin-bottom:6px;color:#1a6fb0;">
+                        ${p.axisValue}
+                    </div>
+                    <div>${p.marker} 数值：<strong>${p.value.toLocaleString()}</strong></div>
+                `;
+            }
+        },
+
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '8%',
+            top: '12%',
+            containLabel: true
+        },
+
+        xAxis: {
+            type: 'category',
+            data: barData.categories,
+            axisLine: { lineStyle: { color: '#cccccc' } },
+            axisLabel: { color: '#333333', fontSize: 12, interval: 0 },
+            axisTick: { show: false }
+        },
+
+        yAxis: {
+            type: 'value',
+            name: '数值',
+            nameTextStyle: { color: '#666666', fontSize: 12 },
+            axisLabel: { color: '#333333', fontSize: 12 },
+            splitLine: { lineStyle: { color: '#eef2f6', type: 'dashed' } },
+            axisLine: { show: false }
+        },
+
+        series: [
+            {
+                name: '数值',
+                type: 'bar',
+                data: barData.values,
+                barWidth: '46%',
+                itemStyle: {
+                    // 柱体蓝色渐变
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#3a8fd4' },
+                        { offset: 1, color: '#1a6fb0' }
+                    ]),
+                    borderRadius: [6, 6, 0, 0]
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#1a6fb0' },
+                            { offset: 1, color: '#0f4a7a' }
+                        ])
+                    }
+                }
+            }
+        ]
+    };
+
+    barChart.setOption(barOption);
+
+    window.addEventListener('resize', () => barChart.resize());
+</script>
+
+</body>
+</html>
